@@ -1,0 +1,16 @@
+,r/MensLib,r/MensRights
+N comments analysed,1335.0,14389.0
+unique authors,549.0,4846.0
+threads,81.0,1124.0
+median words,50.0,25.0
+top-level %,17.5,34.2
+Jan-Feb 2019 %,68.9,61.3
+mean polarity,-0.335,-0.379
+SD polarity,0.506,0.516
+mean VADER,0.056,-0.023
+takes a position on ad %,38.2,42.0
+"of those, critical %",12.9,86.4
+mean resentment,0.333,0.908
+mean identity_threat,0.34,0.747
+mean zero_sum,0.057,0.451
+mean hostility,0.122,0.416

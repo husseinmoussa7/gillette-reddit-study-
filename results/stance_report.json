@@ -1,0 +1,148 @@
+{
+  "n_coded_comments": 15724,
+  "share_taking_position": {
+    "MensLib": 0.382,
+    "MensRights": 0.42
+  },
+  "stance_among_positioned_pct": {
+    "critical": {
+      "MensLib": 12.9,
+      "MensRights": 86.4
+    },
+    "mixed": {
+      "MensLib": 15.3,
+      "MensRights": 2.7
+    },
+    "supportive": {
+      "MensLib": 71.8,
+      "MensRights": 10.9
+    }
+  },
+  "n_positioned": {
+    "MensLib": 510,
+    "MensRights": 6042
+  },
+  "constructs_mean": {
+    "resentment": {
+      "MensLib": 0.333,
+      "MensRights": 0.908
+    },
+    "identity_threat": {
+      "MensLib": 0.34,
+      "MensRights": 0.747
+    },
+    "zero_sum": {
+      "MensLib": 0.057,
+      "MensRights": 0.451
+    },
+    "hostility": {
+      "MensLib": 0.122,
+      "MensRights": 0.416
+    }
+  },
+  "constructs_pct_ge2": {
+    "resentment": {
+      "MensLib": 5.2,
+      "MensRights": 29.8
+    },
+    "identity_threat": {
+      "MensLib": 10.4,
+      "MensRights": 23.6
+    },
+    "zero_sum": {
+      "MensLib": 0.5,
+      "MensRights": 11.2
+    },
+    "hostility": {
+      "MensLib": 1.5,
+      "MensRights": 10.1
+    }
+  },
+  "constructs_by_stance": {
+    "resentment": {
+      "critical": 1.83,
+      "mixed": 0.946,
+      "not_about_ad": 0.344,
+      "supportive": 0.432
+    },
+    "identity_threat": {
+      "critical": 1.61,
+      "mixed": 1.054,
+      "not_about_ad": 0.216,
+      "supportive": 0.44
+    },
+    "zero_sum": {
+      "critical": 0.982,
+      "mixed": 0.306,
+      "not_about_ad": 0.135,
+      "supportive": 0.066
+    },
+    "hostility": {
+      "critical": 0.698,
+      "mixed": 0.095,
+      "not_about_ad": 0.231,
+      "supportive": 0.317
+    }
+  },
+  "mean_confidence": {
+    "critical": 0.926,
+    "mixed": 0.875,
+    "not_about_ad": 0.994,
+    "supportive": 0.949
+  },
+  "validation": {
+    "kappa_vs_hand_labels": 0.718,
+    "agreement": 0.85,
+    "n_hand_labelled": 40
+  },
+  "critical_share_gap": {
+    "ML_minus_MR": -0.736,
+    "ci": [
+      -0.78,
+      -0.693
+    ]
+  },
+  "gap_resentment": {
+    "ML_minus_MR": -0.577,
+    "ci": [
+      -0.668,
+      -0.47
+    ]
+  },
+  "gap_identity_threat": {
+    "ML_minus_MR": -0.41,
+    "ci": [
+      -0.568,
+      -0.249
+    ]
+  },
+  "gap_zero_sum": {
+    "ML_minus_MR": -0.394,
+    "ci": [
+      -0.438,
+      -0.344
+    ]
+  },
+  "gap_hostility": {
+    "ML_minus_MR": -0.296,
+    "ci": [
+      -0.332,
+      -0.266
+    ]
+  },
+  "removal_bounds": {
+    "removal_rate": {
+      "MensLib": 0.224,
+      "MensRights": 0.049
+    },
+    "observed_critical_share": {
+      "MensLib": 0.129,
+      "MensRights": 0.864
+    },
+    "observed_gap": -0.7342095527386725,
+    "manski_bounds": [
+      -0.4967411736585663,
+      -0.7699043198859591
+    ]
+  }
+}

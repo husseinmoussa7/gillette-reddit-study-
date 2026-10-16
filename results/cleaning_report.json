@@ -1,0 +1,52 @@
+{
+  "units_total": 17643,
+  "by_kind": {
+    "comment": 17023,
+    "post": 620
+  },
+  "by_status": {
+    "send": 16343,
+    "skip_removed": 1145,
+    "skip_no_content": 114,
+    "skip_bot": 26,
+    "skip_mod_notice": 15
+  },
+  "by_status_subreddit": {
+    "MensLib": {
+      "send": 1363,
+      "skip_bot": 2,
+      "skip_mod_notice": 12,
+      "skip_no_content": 4,
+      "skip_removed": 390
+    },
+    "MensRights": {
+      "send": 14980,
+      "skip_bot": 24,
+      "skip_mod_notice": 3,
+      "skip_no_content": 110,
+      "skip_removed": 755
+    }
+  },
+  "to_send": 16343,
+  "unique_texts_to_send": 16221,
+  "duplicates_collapsed": 122,
+  "flags_among_sent": {
+    "short (<3 words)": 471,
+    "long (>600 words, truncated)": 105,
+    "quote heavy (>60% quoted)": 239
+  },
+  "integrity": {
+    "duplicate ids": 0,
+    "null created": 0,
+    "subreddits": [
+      "MensLib",
+      "MensRights"
+    ],
+    "date_range": [
+      "2019-01-14 16:33:02+00:00",
+      "2026-08-19 15:41:39+00:00"
+    ],
+    "sent rows with empty text": 0,
+    "skipped rows with text kept": 1300
+  }
+}

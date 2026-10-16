@@ -1,0 +1,9 @@
+,critical ~ MensRights
+log-odds,3.552
+cluster SE,0.182
+odds ratio,34.9
+95% CI (OR),"[24.41, 49.88]"
+p,1.31e-84
+raw difference in critical share,-0.734
+N,6552
+clusters,1010

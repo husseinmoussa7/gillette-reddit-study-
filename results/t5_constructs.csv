@@ -1,0 +1,12 @@
+,resentment,identity_threat,zero_sum,hostility
+r/MensLib mean,0.333,0.34,0.057,0.122
+r/MensLib SD,0.573,0.717,0.253,0.378
+r/MensRights mean,0.908,0.747,0.451,0.416
+r/MensRights SD,1.037,1.075,0.73,0.779
+% >=2 MensLib,5.2,10.4,0.5,1.5
+% >=2 MensRights,29.8,23.6,11.2,10.1
+difference,-0.575,-0.407,-0.394,-0.294
+95% CI (thread bootstrap),"[-0.663, -0.475]","[-0.572, -0.238]","[-0.439, -0.341]","[-0.327, -0.265]"
+Cohen's d,-0.572,-0.388,-0.561,-0.391
+Cliff's delta,-0.292,-0.192,-0.276,-0.178
+Mann-Whitney p,3.31e-82,2.02e-40,9.44e-96,5.95e-44

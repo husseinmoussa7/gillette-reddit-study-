@@ -1,0 +1,4 @@
+,n hand-labelled,agreement %,Cohen's kappa,95% CI
+RoBERTa (tone),80,72.5,0.588,"[0.44, 0.72]"
+VADER (tone),80,63.7,0.45,"[0.29, 0.61]"
+gpt-4.1-mini (stance),40,85.0,0.718,"[0.47, 0.89]"

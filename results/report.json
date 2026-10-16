@@ -1,0 +1,54 @@
+{
+  "rob_score": {
+    "mean_MensLib": -0.3350586436962716,
+    "mean_MensRights": -0.37902714530136244,
+    "raw_diff": 0.04396850160509086,
+    "thread_boot_CI": [
+      -0.008491411084724341,
+      0.14728446524091054
+    ],
+    "cliffs_delta": 0.07458000000000004,
+    "ols_mr_coef": -0.12254325411947996,
+    "ols_mr_se_cluster": 0.02920325370566143,
+    "ols_p_asymptotic": 2.7140757519072803e-05,
+    "wild_bootstrap_p": 0.0,
+    "wild_reps": 2000,
+    "n_threads": 1205
+  },
+  "vader": {
+    "mean_MensLib": 0.055532284644194754,
+    "mean_MensRights": -0.02321466397942873,
+    "raw_diff": 0.07874694862362348,
+    "thread_boot_CI": [
+      -0.004299737793427259,
+      0.23906170242959715
+    ],
+    "cliffs_delta": 0.07761999999999997,
+    "ols_mr_coef": -0.12508191622055645,
+    "ols_mr_se_cluster": 0.04244224478901239,
+    "ols_p_asymptotic": 0.0032076024740312872,
+    "wild_bootstrap_p": 0.0015,
+    "wild_reps": 2000,
+    "n_threads": 1205
+  },
+  "agreement": {
+    "spearman": 0.46986789176922017,
+    "sign_agreement": 0.5559018061561943
+  },
+  "removal_bounds": {
+    "removal_rate": {
+      "MensLib": 0.236,
+      "MensRights": 0.053
+    },
+    "manski": [
+      -0.1927504040806361,
+      0.38441027379103665
+    ],
+    "lee_keep_fraction": 0.807000906959644,
+    "lee": [
+      -0.0858259666138651,
+      0.2493017391159299
+    ],
+    "naive_gap": 0.03714904762360016
+  }
+}

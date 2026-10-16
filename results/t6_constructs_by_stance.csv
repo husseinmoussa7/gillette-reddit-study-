@@ -1,0 +1,7 @@
+,resentment,resentment,resentment,identity_threat,identity_threat,identity_threat,zero_sum,zero_sum,zero_sum,hostility,hostility,hostility
+,mean,std,size,mean,std,size,mean,std,size,mean,std,size
+ad_stance,,,,,,,,,,,,
+critical,1.83,0.82,5284,1.61,1.115,5284,0.982,0.78,5284,0.698,0.912,5284
+mixed,0.946,0.752,242,1.054,0.939,242,0.306,0.552,242,0.095,0.321,242
+not_about_ad,0.344,0.712,9172,0.216,0.621,9172,0.135,0.472,9172,0.231,0.608,9172
+supportive,0.432,0.601,1026,0.44,0.749,1026,0.066,0.275,1026,0.317,0.666,1026

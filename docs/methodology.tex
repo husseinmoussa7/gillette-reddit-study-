@@ -1,0 +1,476 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.4cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{mathpazo}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+
+\definecolor{rule}{HTML}{BBBBBB}
+\captionsetup[table]{font=small,labelfont=bf,skip=4pt}
+\setlist{nosep,leftmargin=1.4em}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.7em}{}
+\titlespacing{\section}{0pt}{1.4ex plus .2ex}{0.7ex}
+\titlespacing{\subsection}{0pt}{1.1ex plus .2ex}{0.5ex}
+\setlength{\parskip}{0.55ex}
+\setlength{\parindent}{0pt}
+\renewcommand{\arraystretch}{1.15}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+% no line-break hyphenation; \sloppy absorbs the slack in justified text
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2000
+\emergencystretch=3em
+\sloppy
+
+\title{\vspace{-1.5cm}\textbf{Reactions to the Gillette ``We Believe'' Advertisement\\
+on r/MensLib and r/MensRights}\\[0.3em]
+\large Methodology, Statistics and Replication Materials}
+\date{\vspace{-0.4em}\normalsize 16 October 2026\vspace{-0.6em}}
+\author{}
+
+\begin{document}
+\maketitle
+\vspace{-1.1cm}
+
+\noindent\textcolor{rule}{\rule{\linewidth}{0.4pt}}
+\vspace{0.8em}
+
+This document records how the corpus was collected, how tone and stance were measured, how the
+statistics were computed, and what ships in the replication package. It is a companion to the
+findings write-up.
+
+\section{Study design}
+
+Posts and comments about the Gillette ``We Believe: The Best Men Can Be'' advertisement
+(released 14 January 2019) were collected from two subreddits, r/MensLib and r/MensRights, over
+January 2019 -- September 2026, and measured on two dimensions:
+
+\begin{itemize}
+\item \textbf{Tone} --- affective valence of the text, from local transformer and lexicon models.
+\item \textbf{Stance and constructs} --- position on the ad, plus resentment, identity threat,
+zero-sum thinking and hostility, from LLM coding.
+\end{itemize}
+
+The two dimensions answer different questions, and the distinction carries the study. Tone measures
+how a comment sounds; stance measures what position it takes. A warm-sounding r/MensRights comment
+praising the Egard rebuttal video is positive in tone and critical in stance. Tone differs little
+between the communities and its sign is not identified once differential moderation is accounted
+for; stance differs enormously and survives the same sensitivity analysis.
+
+\section{Data collection}
+
+\textbf{Source.} The Arctic Shift Reddit archive (\code{arctic-shift.photon-reddit.com}), a free
+public mirror requiring no API key. Reddit's own API caps search at roughly 1{,}000 results and
+skews toward recent content, which makes it unusable for a January 2019 event; Pushshift, the
+standard alternative, is now restricted to subreddit moderators.
+
+\textbf{Complete post recall.} Arctic Shift's keyword search times out on a subreddit as large as
+r/MensRights. Rather than accept partial results, the scraper listed \emph{every} post in both
+subreddits month by month --- 171{,}723 posts --- and filtered locally against the relevance rule.
+Post recall is therefore a census of the two subreddits over the window, not a search result.
+
+\textbf{Two comment sweeps}, merged and de-duplicated, with provenance recorded in the flags
+\code{from\_thread} and \code{from\_kw\_search}:
+
+\begin{enumerate}
+\item \emph{Thread sweep} --- every comment in a thread whose post matches, whether or not the
+comment names the ad. This preserves conversation: 13{,}856 comments never mention the ad but reply
+within those threads.
+\item \emph{Keyword sweep} --- comments mentioning Gillette elsewhere in the same two subreddits,
+catching the ad invoked in later, unrelated discussions.
+\end{enumerate}
+
+\textbf{Search terms.} \code{Gillette} plus the misspellings \code{Gilette} and \code{Gillete}.
+``We Believe'' could not be searched as a phrase, since the server matches the two words
+separately, so it is matched locally in the retrieved text.
+
+\textbf{Relevance rule.} A unit is relevant if it matches the strict phrases (Gillette
+ad / commercial / advertisement; ``We Believe'' ad / commercial / advertisement), \emph{or} mentions
+Gillette alongside an ad-context word (ad, commercial, campaign, boycott, toxic masculinity, P\&G),
+\emph{or} mentions Gillette between 13 January and 30 June 2019, when any such mention concerns the
+ad. Comments also qualify by sitting in a relevant thread. The unrelated Moore \& Gillette book on
+masculinity is excluded by name.
+
+\textbf{Verification.} Comments retrieved per thread were reconciled against each post's own
+\code{num\_comments} field: median 100\,\% per thread, 105\,\% in aggregate, the excess because the
+archive also holds comments posted after that count was recorded. No duplicate IDs. Live
+spot-checks against reddit.com were not possible --- Reddit blocks automated fetching from the
+collection machine --- so every row stores a permalink for manual verification.
+
+\section{Sample construction}
+
+Every one of the 17{,}643 collected units carries a status. Nothing is deleted from the dataset;
+excluded rows remain with a flag, so all counts reconcile.
+
+\begin{table}[h]
+\centering\small
+\caption{Sample construction}\label{tab:flow}
+\begin{tabular}{lrrrrrr}
+\toprule
+& Collected & Removed & Bots & Mod notices & No text & \textbf{Analysed} \\
+\midrule
+r/MensLib comments    & 1{,}743  & 390 (22.4\,\%) & 2  & 12 & 4   & \textbf{1{,}335} \\
+r/MensRights comments & 15{,}280 & 755 (4.9\,\%)  & 24 & 3  & 109 & \textbf{14{,}389} \\
+Posts (both subs)     & 620      & 0              & 0  & 0  & 1   & \textbf{619} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Exclusion rules.} Removed or deleted bodies (1{,}145) store the literal string
+\code{[removed]}, so no text exists to measure; this is a property of the data rather than a
+judgement, and the differential rate across subreddits is itself a result. Units with no codeable
+text (114) are bare URLs, bare markdown links and single characters --- note that very short
+comments are \emph{kept}, since ``\#boycottgillette'' carries stance. Bots (26) are known bot
+accounts plus bodies containing ``I am a bot''. Moderator notices (15) are removal announcements,
+which are moderation actions rather than opinions.
+
+\textbf{Posts whose body was removed are retained} (100 cases), because the title survives and
+carries codeable text. This is why 619 of 620 posts are analysed.
+
+\textbf{Normalisation} is deliberately minimal: HTML entity decoding, zero-width character removal,
+whitespace collapsing. No stemming, stopword removal or case folding, since the transformer and LLM
+measures expect natural text. 122 units share identical text; each distinct text was coded once and
+the label copied to its duplicates.
+
+\section{Measures}
+
+\subsection{Tone}
+
+\begin{table}[h]
+\centering\small
+\caption{Tone measures}
+\begin{tabular}{lll}
+\toprule
+Measure & Model & Output \\
+\midrule
+Polarity (primary)    & \code{cardiffnlp/twitter-roberta-base-sentiment-latest} & $p(\text{pos})-p(\text{neg})$, $[-1,1]$ \\
+Emotion               & \code{j-hartmann/emotion-english-distilroberta-base}    & 7 probabilities; argmax \\
+Polarity (robustness) & VADER 3.3.2                                             & compound, $[-1,1]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Truncation is at 256 word-piece tokens, not 128. This matters: 128 would truncate about 15\,\% of
+comments, and truncation is asymmetric across subreddits because r/MensLib comments are twice as
+long, which would manufacture the very difference being tested.
+
+\subsection{Stance and constructs}
+
+\code{gpt-4.1-mini}, temperature 0, one call per unit, OpenAI structured outputs under a strict JSON
+schema. 16{,}221 unique texts, zero failures, \$8.90, 25 minutes.
+
+The model returns one \code{ad\_stance} label (supportive, critical, mixed, not\_about\_ad), four
+constructs rated 0--3 (0 absent, 1 mild or implicit, 2 clearly present, 3 strong and central), a
+confidence, and a rationale of at most fifteen words retained for auditing. The construct
+definitions as given to the model:
+
+\begin{itemize}
+\item \textbf{resentment} --- grievance or bitterness that the author's group is treated unfairly,
+taken for granted or wronged. Not mere disagreement: it carries a sense of injustice done to ``us''.
+\item \textbf{identity threat} --- sense that being a man, or masculinity itself, is devalued,
+attacked, pathologised or misrepresented.
+\item \textbf{zero-sum} --- frames one group's gains as necessarily another's losses.
+\item \textbf{hostility} --- antagonism toward people or groups: insults, contempt, dehumanising
+language, mockery aimed at persons. Anger alone does not count unless directed at people.
+\end{itemize}
+
+Six rules govern the hard cases: code only the author's own words, since lines beginning
+``\code{>}'' are quoted from someone else; judge position, not tone; attacking the ad's
+\emph{critics} is supportive while attacking its \emph{defenders} is critical; a reproduced news
+headline with no added opinion is not\_about\_ad, but a headline carrying the sharer's sarcasm or an
+added tag is coded; boycotting Gillette or buying a rival brand \emph{because of the ad} is
+critical; and a stance is coded only when the comment itself refers to the ad, never inferred from
+the thread's topic.
+
+The last three rules were added after a 200-unit pilot exposed two systematic errors: neutral news
+headlines read as endorsements, and stance inferred from thread topic for deep reply-chain comments
+that never mention the ad. Adding them raised blind agreement from $\kappa = 0.52$ to
+$\kappa = 0.72$. Pilot codings were discarded rather than merged, so the released corpus is
+internally consistent under the final prompt. The verbatim system prompt and JSON schema are in
+\code{analysis/prompt\_verbatim.md}.
+
+\subsection{Themes}
+
+MiniLM-L6-v2 embeddings (mean-pooled, L2-normalised, 256 tokens), reduced by truncated SVD to 50
+dimensions, clustered with $k$-means, $k$ chosen by silhouette over 8--20 ($k=8$). Clusters were
+labelled by reading the top c-TF-IDF terms and six nearest-centroid comments per cluster from both
+subreddits. Silhouette peaks at 0.077, so these are soft groupings and should be reported as rough
+and interpretive rather than as recovered latent structure.
+
+\section{Inference}
+
+Comments nest in threads, and the nesting is extreme: five threads carry 83\,\% of r/MensLib's
+comments, across 1{,}205 threads in total. Treating 15{,}724 comments as independent would produce
+standard errors far too small, so every interval accounts for clustering.
+
+\begin{itemize}
+\item \textbf{Primary tone specification.} OLS of polarity on an r/MensRights indicator with
+$\log(1+\text{words})$, a top-level indicator and period fixed effects, with thread-clustered
+standard errors, plus a wild cluster bootstrap (Rademacher weights, 2{,}000 replications). The
+bootstrap matters because treatment is constant within cluster and the cluster-size distribution is
+extreme, conditions under which asymptotic cluster-robust standard errors are too narrow.
+\item \textbf{Unadjusted differences.} Bootstrap resampling whole threads, 2{,}000 replications.
+\item \textbf{Stance.} Logistic regression of \emph{critical} on the same covariates with
+thread-clustered standard errors, alongside the thread-bootstrapped difference in critical share.
+\item \textbf{Effect sizes.} Raw difference, Cohen's $d$ and Cliff's $\delta$. Cliff's $\delta$ is
+preferred for polarity because the distribution is bimodal at $\pm 1$, which makes a pooled-SD $d$
+misleading.
+\end{itemize}
+
+Comment score is never used as a control: it is downstream of the comment and would be a collider.
+Length is in every specification because longer comments score more negative --- polarity falls from
+$-0.04$ in the shortest decile to $-0.50$ in the longest --- and r/MensLib comments are twice as
+long, so length suppresses the raw difference.
+
+\textbf{Differential moderation.} r/MensLib removed 22.4\,\% of its comments against r/MensRights'
+4.9\,\%, and the text is unrecoverable, which is selective attrition directly on the outcome. Lee
+bounds equalise retention by trimming 19.3\,\% from the lower-removal group's tails; Manski bounds
+assign the unobserved comments their most adverse values. The resulting asymmetry is the central
+methodological finding.
+
+\begin{table}[h]
+\centering\small
+\caption{Sensitivity to differential moderation}\label{tab:bounds}
+\begin{tabular}{lccccl}
+\toprule
+& Observed & Adjusted & Lee bounds & Manski bounds & Sign identified? \\
+\midrule
+Tone: polarity gap   & $+0.044$ & $+0.123$ & $[-0.086, +0.249]$ & $[-0.193, +0.384]$ & No \\
+Stance: critical gap & $-0.734$ & Table~\ref{tab:stance} & ---                & $[-0.497, -0.770]$ & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Specification curves re-estimate both results across date windows, provenance subsets, confidence
+thresholds, top-level-only comments, exclusion of the 21 authors who post in both subreddits, and
+downsampling r/MensRights. The tone gap stays positive but small throughout; the stance gap stays
+between $-70$ and $-75$ points.
+
+\section{Results}
+
+\begin{table}[h]
+\centering\small
+\caption{Descriptive statistics, analysis sample}
+\begin{tabular}{lrr}
+\toprule
+& r/MensLib & r/MensRights \\
+\midrule
+Comments analysed            & 1{,}335 & 14{,}389 \\
+Unique authors               & 549     & 4{,}846 \\
+Threads                      & 81      & 1{,}124 \\
+Median words                 & 50      & 25 \\
+Top-level                    & 17.5\,\% & 34.2\,\% \\
+January--February 2019       & 68.9\,\% & 61.3\,\% \\
+Mean polarity (SD)           & $-0.335$ (0.506) & $-0.379$ (0.516) \\
+Mean VADER                   & $+0.056$ & $-0.023$ \\
+Takes a position on the ad   & 38.2\,\% & 42.0\,\% \\
+\quad of those, critical     & 12.9\,\% & 86.4\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Tone: OLS with thread-clustered standard errors. Outcome is RoBERTa polarity except in
+column (5). The coefficient is on the r/MensRights indicator, so negative means more negative than
+r/MensLib.}
+\begin{tabular}{lccccc}
+\toprule
+& (1) & (2) & (3) & (4) & (5) VADER \\
+\midrule
+r/MensRights    & $-0.044$ & $-0.123$ & $-0.119$ & $-0.123$ & $-0.125$ \\
+Cluster SE      & 0.032 & 0.028 & 0.028 & 0.029 & 0.042 \\
+$t$             & $-1.39$ & $-4.37$ & $-4.26$ & $-4.20$ & $-2.95$ \\
+$p$             & 0.165 & $1.3\times10^{-5}$ & $2.1\times10^{-5}$ & $2.7\times10^{-5}$ & 0.003 \\
+$\log$(words)   & --- & $-0.121$ & $-0.121$ & $-0.120$ & $-0.065$ \\
+Top-level       & --- & --- & yes & yes & yes \\
+Period FE       & --- & --- & --- & yes & yes \\
+$R^2$           & 0.001 & 0.069 & 0.069 & 0.070 & 0.019 \\
+\bottomrule
+\end{tabular}
+\\[0.4em]
+\begin{minipage}{0.92\linewidth}\footnotesize
+$N = 15{,}724$ comments in 1{,}205 thread clusters throughout. Column (1) versus (2) is the
+length-suppression result: the difference is indistinguishable from zero until comment length is
+controlled. Wild cluster bootstrap $p < 0.001$ for column (4).
+\end{minipage}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Stance on the advertisement}\label{tab:stance}
+\begin{tabular}{lrrrr}
+\toprule
+& Supportive & Mixed & Critical & Not about the ad \\
+\midrule
+r/MensLib, count              & 366 & 78  & 66       & 825 \\
+r/MensRights, count           & 660 & 164 & 5{,}218  & 8{,}347 \\
+r/MensLib, \% of positioned   & 71.8 & 15.3 & 12.9 & --- \\
+r/MensRights, \% of positioned & 10.9 & 2.7 & 86.4 & --- \\
+\bottomrule
+\end{tabular}
+\\[0.6em]
+\begin{tabular}{lc}
+\multicolumn{2}{l}{\footnotesize Logit: comment is critical, among 6{,}552 positioned comments, 1{,}010 clusters} \\
+\toprule
+r/MensRights log-odds (SE) & 3.552 (0.182) \\
+Odds ratio [95\,\% CI]     & \textbf{34.9} [24.41, 49.88] \\
+$p$                        & $1.3\times10^{-84}$ \\
+Raw difference in critical share & $-0.734$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Constructs by subreddit. Ratings 0--3; confidence intervals resample whole threads.}
+\begin{tabular}{lcccc}
+\toprule
+& Resentment & Identity threat & Zero-sum & Hostility \\
+\midrule
+r/MensLib, mean (SD)     & 0.333 (0.573) & 0.340 (0.717) & 0.057 (0.253) & 0.122 (0.378) \\
+r/MensRights, mean (SD)  & 0.908 (1.037) & 0.747 (1.075) & 0.451 (0.730) & 0.416 (0.779) \\
+$\geq 2$, r/MensLib      & 5.2\,\%  & 10.4\,\% & 0.5\,\%  & 1.5\,\% \\
+$\geq 2$, r/MensRights   & 29.8\,\% & 23.6\,\% & 11.2\,\% & 10.1\,\% \\
+Difference               & $-0.575$ & $-0.407$ & $-0.394$ & $-0.294$ \\
+95\,\% CI                & $[-0.663, -0.475]$ & $[-0.572, -0.238]$ & $[-0.439, -0.341]$ & $[-0.327, -0.265]$ \\
+Cohen's $d$              & $-0.572$ & $-0.388$ & $-0.561$ & $-0.391$ \\
+Cliff's $\delta$         & $-0.292$ & $-0.192$ & $-0.276$ & $-0.178$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Constructs by coded stance, pooling both subreddits}\label{tab:bystance}
+\begin{tabular}{lrcccc}
+\toprule
+Stance & $n$ & Resentment & Identity threat & Zero-sum & Hostility \\
+\midrule
+Critical         & 5{,}284 & 1.830 & 1.610 & 0.982 & 0.698 \\
+Mixed            & 242     & 0.946 & 1.054 & 0.306 & 0.095 \\
+Supportive       & 1{,}026 & 0.432 & 0.440 & 0.066 & 0.317 \\
+Not about the ad & 9{,}172 & 0.344 & 0.216 & 0.135 & 0.231 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:bystance} separates community from position. Resentment and identity threat track criticism of the
+ad rather than subreddit membership: critical comments average 1.83 and 1.61 wherever they were
+posted, against 0.43 and 0.44 for supportive ones.
+
+\section{Validation}
+
+\begin{table}[h]
+\centering\small
+\caption{Agreement with labels assigned blind to model output}\label{tab:kappa}
+\begin{tabular}{lrrrc}
+\toprule
+Measure & $n$ & Agreement & Cohen's $\kappa$ & 95\,\% CI \\
+\midrule
+RoBERTa polarity    & 80 & 72.5\,\% & 0.588 & [0.44, 0.72] \\
+VADER               & 80 & 63.7\,\% & 0.450 & [0.29, 0.61] \\
+gpt-4.1-mini stance & 40 & 85.0\,\% & 0.718 & [0.47, 0.89] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Labels were assigned without sight of model output, on stratified samples spanning both subreddits
+and the full score range. Both labelled samples ship with the package, each carrying the model's
+label alongside, so $\kappa$ is recomputable and a further coder can work through them blind.
+
+Three findings follow. First, the error patterns are interpretable: VADER called 9 of 24 negatives
+positive, defeated by the sarcasm abundant in this corpus, while RoBERTa's opposite weakness
+labelled 10 of 27 neutrals negative, reading procedural remarks as hostile. Second, measurement
+error does not favour either side --- RoBERTa accuracy was 75.0\,\% in r/MensLib against 70.0\,\% in
+r/MensRights --- which is the property that matters for a between-community comparison. Third,
+prompt wording moved $\kappa$ by 0.20, from 0.52 to 0.72, which quantifies how much LLM coding
+depends on instruction design and argues for publishing the prompt verbatim rather than describing
+it.
+
+The stance coding was additionally checked on the subsets most likely to break it --- quote-heavy
+comments, very short comments and low-confidence codings --- with no material change.
+
+\section{Replication materials}
+
+The package is \code{Gillette\_Replication\_Package.zip}, with \code{REPLICATION.md} as its entry
+point and \code{MANIFEST.csv} listing every file with size and SHA-256 prefix. Each pipeline step is
+resumable; steps 6--10 are deterministic under fixed seeds.
+
+\begin{table}[h]
+\centering\small
+\caption{Pipeline}
+\begin{tabular}{llr}
+\toprule
+Step & Command & Runtime \\
+\midrule
+1. Collect             & \code{python scrape.py all MensLib} / \code{... MensRights} & 2.5 h \\
+2. Build tables        & \code{python summary.py}                   & 1 min \\
+3. Clean and QA        & \code{python -m analysis.prepare\_llm}      & 30 s \\
+4. Tone and emotion    & \code{python analysis/score.py all}        & 35 min \\
+5. Stance, constructs  & \code{python -m analysis.llm\_code run}     & 25 min \\
+6. Tone inference      & \code{python analysis/compare.py}          & 6 min \\
+7. Stance inference    & \code{python -m analysis.stance\_compare}   & 4 min \\
+8. Themes              & \code{python -m analysis.themes}           & 12 min \\
+9. Figures             & \code{python analysis/figures.py}          & 1 min \\
+10. Tables             & \code{python -m analysis.report\_tables}    & 2 min \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Contents.} Code: \code{scrape.py}, \code{summary.py}, seven analysis modules, the build
+scripts, the verbatim prompt, and \code{requirements-frozen.txt} (Python 3.13.5; pandas 2.3.3,
+numpy 2.3.1, scipy 1.16.0, scikit-learn 1.8.0, statsmodels 0.15.0, torch 2.6.0, transformers 5.3.0,
+openai 2.9.0, vaderSentiment 3.3.2). Data: the full comment and post tables with all statuses, the
+cleaning statuses, tone scores and stance codes, and a shareable extract with a codebook defining
+every column. Results: Tables 1--8 as CSV, both specification curves, every statistic quoted here as
+JSON, both validation samples, and eleven figures at 200 dpi.
+
+\textbf{Environment caveats.} The collection machine carries \code{torchvision} 0.2.0 against
+\code{torch} 2.6, which breaks transformers' model loading; \code{analysis/score.py} shims the two
+attributes it needs, and the shim is inert on a clean install. \code{sentence\_transformers} is
+unusable for the same reason, so embeddings are computed directly through \code{transformers} with
+mean pooling and L2 normalisation, numerically equivalent to
+\code{SentenceTransformer.encode(normalize\_embeddings=True)} for this model.
+
+\textbf{Ethics and data handling.} Public Reddit content from a public archive; no authentication
+and no private data. Usernames are retained as posted in the working files; a salted-hash version
+is available and should replace them before any public deposit, preserving author counts and
+cross-posting detection without naming individuals. Removed and deleted comments carry no text in
+the archive, so content their authors withdrew is not reproduced --- only the fact and timing of
+removal is retained.
+
+\textbf{Cost and compute.} Collection and all local models ran on CPU (Intel i7-6700K, 16\,GB) in
+about 3.5 hours. The LLM pass cost \$8.90 for 16{,}221 units.
+
+\section{Limitations}
+
+\begin{enumerate}
+\item \textbf{Tone is not stance.} The stance coding addresses this for the research question, but
+the tone measures themselves remain valence rather than position.
+\item \textbf{Clustering.} r/MensLib's effective sample is closer to five or ten conversations than
+to 1{,}335 observations; for stance, 58 threads contain a positioned comment and five hold 81\,\% of
+them.
+\item \textbf{Soft clusters.} Themes are interpretive groupings, silhouette 0.077.
+\item \textbf{Model dependence.} Stance figures are conditional on \code{gpt-4.1-mini} and the
+published prompt. A different model or prompt would need revalidation; the pilot showed prompt
+wording moving $\kappa$ by 0.20.
+\item \textbf{Asymmetric populations.} 4{,}846 r/MensRights authors against 549 in r/MensLib, with
+time spans that diverge after 2019.
+\item \textbf{Unobserved removed content.} 1{,}145 comments carry no text. The bounds in Table~\ref{tab:bounds}
+quantify the consequence: it is binding for tone and not for stance.
+\end{enumerate}
+
+\end{document}
